@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,18 +22,26 @@ import com.financiero.test.dtoRequest.dtoRequestTransaccion;
 import com.financiero.test.dtoResponse.dtoResponseCrear;
 import com.financiero.test.dtoResponse.dtoResponseGeneral;
 import com.financiero.test.models.Cuenta;
-import com.financiero.test.models.Persona;
+import com.financiero.test.models.Usuario;
+import com.financiero.test.repositories.UsuarioRepository;
 import com.financiero.test.services.GeneralService;
 
 @RestController
 @RequestMapping("/Financiero")
 public class GeneralController {
 
-
+	
 	GeneralService generalService;
 	
 	@Autowired
 	dtoResponseGeneral responseSaldo;
+	
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
 	
 	@Value("${com.saldo.minimo}")
 	Integer valorMinimo;
@@ -77,4 +86,19 @@ public class GeneralController {
 		return  new ResponseEntity<Object>(this.responseSaldo, HttpStatus.OK);
 	}
 	
+	@GetMapping("/usuarios")
+	public List<Usuario> getAllUsuarios() {
+		return usuarioRepository.findAll();
+	}
+	
+	@GetMapping("/usuario")
+	public Usuario getUsuario(@RequestParam String username) {
+		return usuarioRepository.findByUsername(username);
+	}
+	@PostMapping("/usuario/")
+	public void saveUsuario(RequestEntity<Usuario>  usuario) {
+		usuario.getBody().setPassword(bCryptPasswordEncoder.encode(usuario.getBody().getPassword()));
+		System.out.println(usuario.getBody().getPassword());
+		usuarioRepository.save(usuario.getBody());
+	}
 }
