@@ -14,6 +14,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import static com.financiero.test.security.SecurityConstants.*;
+
+import java.util.Arrays;
+
 import com.financiero.test.services.UsuarioServicio;
 
 @Configuration
@@ -51,8 +54,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
-		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-		return source;
+	    CorsConfiguration configuration = new CorsConfiguration();
+	    configuration.addAllowedOrigin("http://localhost:3000/");
+	    configuration.setAllowCredentials(true);
+	    configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "OPTIONS", "DELETE"));
+	    configuration.setAllowedHeaders(Arrays.asList("X-Requested-With", "Content-Type", "Authorization", "Origin",
+	            "Accept", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+	    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+	    source.registerCorsConfiguration("/**", configuration);
+	    return source;
 	}
 }

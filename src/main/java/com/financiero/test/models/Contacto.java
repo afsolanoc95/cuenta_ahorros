@@ -25,9 +25,9 @@ public class Contacto {
 	@Column(nullable=false)
 	private Long personaId;
 	
-	@Column(nullable=false)
+	@Column(nullable=true)
 	private String telefono;
 	
-	@Column(nullable=false)
+	@Column(nullable=true)
 	 private String email;
 }

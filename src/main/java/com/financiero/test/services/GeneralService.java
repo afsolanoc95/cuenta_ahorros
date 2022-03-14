@@ -132,6 +132,12 @@ public class GeneralService {
 				contacto.setTelefono(create.getTelefono());
 				this.contactoRepository.save(contacto);
 				if(!(create.getTelefono2().isEmpty())|| !(create.getEmail2().isEmpty()) ) {
+					if(create.getTelefono2().isEmpty()) {
+						create.setTelefono2(null);
+					}
+					if(create.getEmail2().isEmpty()) {
+						create.setEmail2(null);
+					}
 					contacto2.setPersonaId(create.getCedula());
 					contacto2.setEmail(create.getEmail2());
 					contacto2.setTelefono(create.getTelefono2());
